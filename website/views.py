@@ -16,7 +16,7 @@ def index(request):
 
 def test_view(request):
     
-    posts = Post.objects.filter(published_date__gte = datetime.datetime.now() )
+    posts = Post.objects.filter(published_date__lte = datetime.datetime.now() )
     context ={'posts': posts}
     return render(request,"website/test.html",context)
 

@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from urllib import request
 from .models import Post
 import datetime
+from django.utils import timezone
 
 # Create your views here.
 def blog_single_view(request,pk):
@@ -14,7 +15,7 @@ def blog_single_view(request,pk):
 
 
 def blog_view(request):
-    posts = Post.objects.filter(published_date__gte = datetime.datetime.now() )
+    posts = Post.objects.filter(published_date__lte = timezone.now()  , status=1)
     context ={'posts': posts}
     return render(request,"blog/blog-home.html",context)
 
