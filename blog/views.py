@@ -6,10 +6,17 @@ from django.utils import timezone
 
 # Create your views here.
 def blog_single_view(request,pk):
+    
     post = get_object_or_404(Post,id=pk)
+    next_post = Post.objects.filter(id__lt=post.id , status= 1).order_by('-id').first()
+    prev_post =Post.objects.filter(id__gt=post.id, status = 1).order_by('-id').last()
+    
     post.counted_views+=1
     post.save()
-    context ={'post': post}
+    context ={'post': post,
+               'prev':prev_post,
+               'next':next_post,
+               }
     return render(request,"blog/blog-single.html",context)
     
 
