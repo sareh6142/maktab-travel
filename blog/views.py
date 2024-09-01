@@ -10,12 +10,15 @@ def blog_single_view(request,pk):
     post = get_object_or_404(Post,id=pk)
     next_post = Post.objects.filter(id__lt=post.id , status= 1).order_by('-id').first()
     prev_post =Post.objects.filter(id__gt=post.id, status = 1).order_by('-id').last()
-    
+    lowest_id = Post.objects.first().id
+    highest_id = Post.objects.last().id
     post.counted_views+=1
     post.save()
     context ={'post': post,
                'prev':prev_post,
                'next':next_post,
+               'lowest_id':lowest_id,
+               'highest_id':highest_id,
                }
     return render(request,"blog/blog-single.html",context)
     
