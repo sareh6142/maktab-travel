@@ -7,7 +7,7 @@ from django.utils import timezone
 # Create your views here.
 def blog_single_view(request,pk):
     
-    post = get_object_or_404(Post,id=pk)
+    post = get_object_or_404(Post, id=pk , published_date__lte = timezone.now() , status = 1)
 
     post_first = Post.objects.filter(published_date__lte = timezone.now() , status = 1).first()
     post_last = Post.objects.filter(published_date__lte = timezone.now() , status = 1).last()
@@ -35,3 +35,8 @@ def blog_view(request):
     context ={'posts': posts}
     return render(request,"blog/blog-home.html",context)
 
+def blog_category(request,cat_name):
+    posts = Post.objects.filter(status = 1)
+    posts = posts.filter(category__name= cat_name)
+    context ={'posts': posts}
+    return render(request,'blog/blog-home.html',context)
