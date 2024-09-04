@@ -3,6 +3,7 @@ from urllib import request
 from .models import Post
 import datetime
 from django.utils import timezone
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 # Create your views here.
 def blog_single_view(request,pk):
@@ -30,13 +31,37 @@ def blog_single_view(request,pk):
     
 
 
-def blog_view(request):
+def blog_view(request,**kwargs):
     posts = Post.objects.filter(published_date__lte = timezone.now()  , status=1)
+    if kwargs.get('cat_name')!= None:
+        posts = posts.filter(category__name=kwargs['cat_name'])
+    elif kwargs.get('author__username')!=None:
+        posts = posts.filter(author__username = kwargs['author_username'])
+    
+    posts = Paginator(posts,3)
+    try:
+        page_number = request.GET.get('page')
+        posts =posts.get_page(page_number)
+    except PageNotAnInteger:
+        posts = posts.get_page(1)
+    except EmptyPage:
+        posts = posts.get_page(1)
+
+
     context ={'posts': posts}
     return render(request,"blog/blog-home.html",context)
 
 def blog_category(request,cat_name):
-    posts = Post.objects.filter(status = 1)
+    posts = Post.objects.filter(published_date__lte = timezone.now(), status = 1)
     posts = posts.filter(category__name= cat_name)
     context ={'posts': posts}
+    return render(request,'blog/blog-home.html',context)
+
+
+def blog_search(request):
+    posts= Post.objects.filter(published_date__lte = timezone.now(), status=1)
+    if request.method == 'Get':
+        if s:= request.Get.get('s'):
+            posts = posts.filter(content__contains=s)
+    context = {'posts':posts}
     return render(request,'blog/blog-home.html',context)
