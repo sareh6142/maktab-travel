@@ -11,7 +11,9 @@ from django.contrib import messages
 def contact_view(request):
     if request.method == 'POST':
         updated_request = request.POST.copy()
-        updated_request.update({'subject': " "})
+        if updated_request.get('subject') == ' ':
+            updated_request.setNUll('subject')
+            #updated_request.update({'subject': " "})
         Contact_Form = ContactForm(updated_request)
         #form = Contact_Form(request.POST)
         if Contact_Form.is_valid():
