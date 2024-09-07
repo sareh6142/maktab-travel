@@ -1,18 +1,51 @@
 from urllib import request
 from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,HttpResponseRedirect
 from blog.models import Post
 import datetime
+from .forms import NewsletterForm,ContactForm
+from django.contrib import messages
+
 
 
 def contact_view(request):
-    return render(request,"website/Contact.html")
+    if request.method == 'POST':
+        updated_request = request.POST.copy()
+        updated_request.update({'subject': " "})
+        Contact_Form = ContactForm(updated_request)
+        #form = Contact_Form(request.POST)
+        if Contact_Form.is_valid():
+            action = Contact_Form.save(commit=False)
+            action.name = 'unknown'
+            action.save()
+            messages.add_message(request,messages.SUCCESS,'OK!')
+        else:
+            messages.add_message(request,messages.ERROR,'NOK!')
+    form = ContactForm()
+    return render(request,"website/Contact.html",{'form':form})
 
 def about_view(request):
     return render(request,"website/about.html")
 
 def index(request):
     return render(request,"website/index.html")
+
+
+def newsletter_view(request):
+    if request.method =='POST':
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS,'OK!')
+            return HttpResponseRedirect('/')
+        else:
+            messages.add_message(request,messages.ERROR,'NOK!') 
+
+    else:
+        return HttpResponseRedirect('/')
+
+
+
 
 def test_view(request):
     
