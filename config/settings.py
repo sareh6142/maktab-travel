@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-33s#0(w&6amz%dv(qaoi9%wc1w@pj+6i_r@y9hx60ghgwgt70f
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+SITE_ID = 2
 
 # Application definition
 
@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django_extensions',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+
+
 
     "blog",
     "website",
