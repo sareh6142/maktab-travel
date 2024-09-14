@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from .views import *
+from django.urls import path,include
 
 app_name = 'website'
 urlpatterns = [
@@ -10,5 +11,6 @@ urlpatterns = [
     path('about',about_view,name='about'),
     path('test',test_view,name='test'),
     path('newsletter', newsletter_view , name = 'newsletter'),
+    
 
 ]

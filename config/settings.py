@@ -66,6 +66,7 @@ SUMMERNOTE_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+    'multi_captcha_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +81,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'taggit',
     'django_summernote',
+    'captcha',
    
 
 
@@ -88,7 +90,11 @@ INSTALLED_APPS = [
     "website",
 
 ]
+MULTI_CAPTCHA_ADMIN ={
 
+'engine':'simple-captcha',
+
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
