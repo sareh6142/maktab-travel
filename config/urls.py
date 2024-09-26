@@ -24,6 +24,7 @@ from website.sitemaps import StaticViewSitemap
 from blog.sitemaps import BlogSitemap
 from django.urls import include, path
 from debug_toolbar.toolbar import debug_toolbar_urls
+from django.contrib.auth import views as authViews
 
 
 sitemaps = {
@@ -38,6 +39,12 @@ urlpatterns = [
     path('',include('website.urls')),
     path('blog/',include('blog.urls')),
     path('summernote/', include('django_summernote.urls')),
+    path('accounts/', include('accounts.urls')),
+    #path('accounts/',include('django.contrib.auth.urls')),
+    path('reset_password/',authViews.PasswordResetView.as_view(),name= 'reset_password'),
+    path('reset_password_sent/',authViews.PasswordResetDoneView.as_view(),name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',authViews.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('reset_password_complete/',authViews.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 
     path(
         "sitemap.xml",

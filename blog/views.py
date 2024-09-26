@@ -6,6 +6,9 @@ import datetime
 from django.utils import timezone
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def blog_single_view(request,pk):
@@ -14,7 +17,6 @@ def blog_single_view(request,pk):
         form = CommentForm(request.POST)
         if form.is_valid():
             form.save()
-            
             messages.add_message(request,messages.SUCCESS,'OK!')
         else:
             messages.add_message(request,messages.ERROR,'NOK!')
@@ -31,18 +33,38 @@ def blog_single_view(request,pk):
     #highest_id = Post.objects.last().id
     post.counted_views+=1
     post.save()
-    comments = Comment.objects.filter(post= post.id, approved = True)
-    form = CommentForm()
-    context ={'post': post,
-            'prev':prev_post,
-            'next':next_post,
-            'post_first':post_first,
-            'post_last':post_last,
-            'comments': comments,
-                'form': form
+    
+    if not post.login_require:
+        comments = Comment.objects.filter(post= post.id, approved = True)
+        form = CommentForm()
+        context ={  'post': post,
+                    'prev':prev_post,
+                    'next':next_post,
+                    'post_first':post_first,
+                    'post_last':post_last,
+                    'comments': comments,
+                    'form': form
             
             }
-    return render(request,"blog/blog-single.html",context)
+        return render(request,"blog/blog-single.html",context)
+    else:
+        if request.user.is_authenticated:
+            comments = Comment.objects.filter(post= post.id, approved = True)
+            form = CommentForm()
+            context ={  'post': post,
+                    'prev':prev_post,
+                    'next':next_post,
+                    'post_first':post_first,
+                    'post_last':post_last,
+                    'comments': comments,
+                    'form': form
+            
+            }
+            return render(request,"blog/blog-single.html",context)
+        else:
+            return HttpResponseRedirect(reverse('accounts:login'))
+        #return render(request,'accounts/login.html',context={'post_id' : post.id})
+        
     
 
 

@@ -18,6 +18,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='blog/', default='blog/feature-img5.jpg')
     author= models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     tag = TaggableManager()
+    login_require =models.BooleanField(default=False)
     category = models.ManyToManyField(Category)
     counted_views = models.IntegerField(default=0)
     status = models.BooleanField(default=False)

@@ -5,6 +5,7 @@ from blog.models import Post
 import datetime
 from .forms import NewsletterForm,ContactForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 
@@ -30,6 +31,7 @@ def about_view(request):
     return render(request,"website/about.html")
 
 def index(request):
+    print(User.objects.get(email='a@a.com'))
     return render(request,"website/index.html")
 
 
